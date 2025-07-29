@@ -32,8 +32,27 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+
+      - name: Confirm PAT is available
+        run: echo "Length of PAT: ${#{{ secrets.PAT }}}"
+
       - name: Push code to TELCOM org repo
-     
         run: |
+          echo "Remote before cleanup:"
+          git remote -v
+
+          # Remove remote if already exists
+          git remote remove mirror || true
+
+          echo "Adding remote with PAT..."
           git remote add mirror https://x-access-token:${{ secrets.PAT }}@github.com/TLCFZC/mirror_spos.git
+
+          echo "Remote after adding:"
+          git remote -v
+
+          echo "Trying git ls-remote to test access..."
+          git ls-remote mirror || echo "Still failed"
+
+          echo "Pushing to mirror..."
           git push mirror main --force
+
