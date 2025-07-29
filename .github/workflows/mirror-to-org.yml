@@ -17,6 +17,12 @@ jobs:
           fetch-depth: 0       # Ensure full history is fetched
           ref: main            # Explicitly checkout the main branch
 
+      - name: Show remotes
+        run: |
+          git remote -v
+          git ls-remote https://x-access-token:${{ secrets.PAT }}@github.com/TLCFZC/mirror_spos.git || echo "Access failed"
+
+
       - name: Set up Git identity
         run: |
           git config --global user.name "github-actions[bot]"
