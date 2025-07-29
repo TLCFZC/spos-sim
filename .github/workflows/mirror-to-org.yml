@@ -18,9 +18,7 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-      - name: Mirror push to TELCOM org repo
-        env:
-          TARGET_TOKEN: ${{ secrets.TARGET_ORG_TOKEN }}
+      - name: Mirror repository
         run: |
           git remote add mirror https://github.com/Telcom-Live-Content-FCZ/sample-spos.git
-          git push https://x-access-token:${TARGET_TOKEN}@github.com/Telcom-Live-Content-FCZ/sample-spos.git --mirror
+          git push mirror --mirror
