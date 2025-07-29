@@ -1,0 +1,26 @@
+name: Mirror to Other Org
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Mirror push to ORG B
+        env:
+          TARGET_TOKEN: ${{ secrets.TARGET_ORG_TOKEN }}
+        run: |
+          git remote add mirror https://x-access-token:${TARGET_TOKEN}@github.com/ORG-B/${{ github.event.repository.name }}.git
+          git push mirror --mirror
