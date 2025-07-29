@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "Length of PAT secret: ${{ secrets.PAT && secrets.PAT.length || '0' }}"
           # This will output something like: "Length of PAT secret: 40" if it's a ghp_ token.
-          # If it outputs "Length of PAT secret: 0", the secret is not being loaded.
+          # If it outputs "Length of PAT secret: 0", the secret is not being loaded....
 
       - name: Push code to second org repo
         env:
