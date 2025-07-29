@@ -135,7 +135,7 @@ const Login = () => {
       <div className="flex flex-col min-h-screen items-center justify-center w-full">
         <div className="w-full max-w-sm p-6 sm:max-w-md lg:max-w-lg shadow-lg md:shadow-none">
           <h2 className="mb-6 text-5xl font-bold text-center text-gray-800 tracking-wider cursor-default">
-          Merchant {t("login")} 
+          MERCHANT GUI {t("login")} 
           </h2>
           <form>
             <div className="mb-4">
