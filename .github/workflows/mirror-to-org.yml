@@ -16,23 +16,18 @@ jobs:
           fetch-depth: 0
           ref: main
 
-      - name: Configure Git identity
+      - name: Set up Git identity
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
 
-      - name: Set up credentials
+      - name: Add mirror remote with PAT
         run: |
-          git remote add mirror https://github.com/TLCFZC/mirror_spos.git
+          git remote add mirror https://x-access-token:${{ secrets.PAT }}@github.com/TLCFZC/mirror_spos.git
 
-      - name: Test read access
-        run: |
-          git ls-remote mirror || (echo "Read access test failed!" && exit 1)
+      - name: Verify access (optional)
+        run: git ls-remote mirror
 
-      - name: Push to mirror with PAT
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        run: |
-          git config credential.helper ""
-          git config --global credential.helper "!f() { echo username=x-access-token; echo password=$GITHUB_TOKEN; }; f"
-          git push mirror main --force
+      - name: Push to mirror
+        run: git push mirror main --force
+
