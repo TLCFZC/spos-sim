@@ -13,6 +13,12 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v3
 
+      - name: Debug PAT value (Temporary - Remove in production)
+        run: |
+          echo "Length of PAT secret: ${{ secrets.PAT && secrets.PAT.length || '0' }}"
+          # This will output something like: "Length of PAT secret: 40" if it's a ghp_ token.
+          # If it outputs "Length of PAT secret: 0", the secret is not being loaded.
+
       - name: Push code to second org repo
         env:
           PAT: ${{ secrets.PAT }}
@@ -21,4 +27,3 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote add mirror https://x-access-token:${PAT}@github.com/TLCFZC/mirror_spos.git
           git push -u mirror main
-
