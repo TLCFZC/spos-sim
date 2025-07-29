@@ -17,6 +17,10 @@ jobs:
           fetch-depth: 0       # Ensure full history is fetched
           ref: main            # Explicitly checkout the main branch
 
+      - name: Debug token access
+        run: |
+          curl -i -H "Authorization: token ${{ secrets.PAT }}" https://api.github.com/repos/TLCFZC/mirror_spos     
+
       - name: Show remotes
         run: |
           git remote -v
