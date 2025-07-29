@@ -33,9 +33,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
 
-      - name: Confirm PAT is available
-        run: echo "Length of PAT: ${#{{ secrets.PAT }}}"
-
       - name: Push code to TELCOM org repo
         run: |
           echo "Remote before cleanup:"
