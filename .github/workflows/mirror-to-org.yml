@@ -22,5 +22,5 @@ jobs:
         env:
           TARGET_TOKEN: ${{ secrets.TARGET_ORG_TOKEN }}
         run: |
-          git remote add mirror https://x-access-token:${TARGET_TOKEN}@github.com/sample-spos/sample-spos-merchantgui.git
+          git remote add mirror https://x-access-token:${TARGET_TOKEN}@github.com/Telcom-Live-Content-FCZ/sample-spos.git
           git push mirror --mirror
