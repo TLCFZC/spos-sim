@@ -14,42 +14,30 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0       # Ensure full history is fetched
-          ref: main            # Explicitly checkout the main branch
-
-      - name: Debug token access
-        run: |
-          curl -i -H "Authorization: token ${{ secrets.PAT }}" https://api.github.com/repos/TLCFZC/mirror_spos     
-
-      - name: Show remotes
-        run: |
-          git remote -v
-          git ls-remote https://x-access-token:${{ secrets.PAT }}@github.com/TLCFZC/mirror_spos.git || echo "Access failed"
-
+          fetch-depth: 0
+          ref: main
 
       - name: Set up Git identity
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-
-      - name: Push code to TELCOM org repo
+      - name: Clean old remote if any
         run: |
-          echo "Remote before cleanup:"
-          git remote -v
-
-          # Remove remote if already exists
+          echo "Cleaning up remote if it exists..."
           git remote remove mirror || true
 
-          echo "Adding remote with PAT..."
+      - name: Add remote with PAT
+        run: |
+          echo "Adding mirror remote with PAT"
           git remote add mirror https://x-access-token:${{ secrets.PAT }}@github.com/TLCFZC/mirror_spos.git
 
-          echo "Remote after adding:"
-          git remote -v
+      - name: Test access to mirror repo
+        run: |
+          echo "Testing access with git ls-remote..."
+          git ls-remote mirror || (echo "Access failed!" && exit 1)
 
-          echo "Trying git ls-remote to test access..."
-          git ls-remote mirror || echo "Still failed"
-
-          echo "Pushing to mirror..."
+      - name: Push to mirror
+        run: |
+          echo "Pushing to mirror repo..."
           git push mirror main --force
-
