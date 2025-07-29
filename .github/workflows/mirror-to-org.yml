@@ -29,8 +29,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Push code to TELCOM org repo
-        env:
-          PAT: ${{ secrets.PAT }}
+     
         run: |
-          git remote add mirror https://x-access-token:${PAT}@github.com/TLCFZC/mirror_spos.git
+          git remote add mirror https://x-access-token:${{secrets.PAT}}@github.com/TLCFZC/mirror_spos.git
           git push mirror main --force
