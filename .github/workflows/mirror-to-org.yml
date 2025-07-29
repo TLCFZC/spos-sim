@@ -1,4 +1,4 @@
-name: Mirror to Other Org
+name: Mirror to TELCOM Org
 
 on:
   push:
@@ -18,9 +18,9 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-      - name: Mirror push to ORG B
+      - name: Mirror push to TELCOM org repo
         env:
           TARGET_TOKEN: ${{ secrets.TARGET_ORG_TOKEN }}
         run: |
-          git remote add mirror https://x-access-token:${TARGET_TOKEN}@github.com/ORG-B/${{ github.event.repository.name }}.git
+          git remote add mirror https://x-access-token:${TARGET_TOKEN}@github.com/sample-spos/sample-spos-merchantgui.git
           git push mirror --mirror
