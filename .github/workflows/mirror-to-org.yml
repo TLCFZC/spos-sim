@@ -17,27 +17,30 @@ jobs:
           fetch-depth: 0
           ref: main
 
-      - name: Set up Git identity
+      - name: Configure Git identity
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Clean old remote if any
+      - name: Set up GitHub credentials
         run: |
-          echo "Cleaning up remote if it exists..."
+          cat <<EOF > ~/.netrc
+          machine github.com
+          login x-access-token
+          password ${{ secrets.PAT }}
+          EOF
+          chmod 600 ~/.netrc
+
+      - name: Add mirror remote
+        run: |
           git remote remove mirror || true
+          git remote add mirror https://github.com/TLCFZC/mirror_spos.git
+          git remote -v
 
-      - name: Add remote with PAT
+      - name: Test access
         run: |
-          echo "Adding mirror remote with PAT"
-          git remote add mirror https://x-access-token:${{ secrets.PAT }}@github.com/TLCFZC/mirror_spos.git
-
-      - name: Test access to mirror repo
-        run: |
-          echo "Testing access with git ls-remote..."
-          git ls-remote mirror || (echo "Access failed!" && exit 1)
+          git ls-remote mirror || (echo "Access test failed!" && exit 1)
 
       - name: Push to mirror
         run: |
-          echo "Pushing to mirror repo..."
           git push mirror main --force
