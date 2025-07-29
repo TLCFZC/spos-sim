@@ -2,8 +2,7 @@ name: Mirror to TELCOM Org
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -22,25 +21,18 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Set up GitHub credentials
+      - name: Set up credentials
         run: |
-          cat <<EOF > ~/.netrc
-          machine github.com
-          login x-access-token
-          password ${{ secrets.PAT }}
-          EOF
-          chmod 600 ~/.netrc
-
-      - name: Add mirror remote
-        run: |
-          git remote remove mirror || true
           git remote add mirror https://github.com/TLCFZC/mirror_spos.git
-          git remote -v
 
-      - name: Test access
+      - name: Test read access
         run: |
-          git ls-remote mirror || (echo "Access test failed!" && exit 1)
+          git ls-remote mirror || (echo "Read access test failed!" && exit 1)
 
-      - name: Push to mirror
+      - name: Push to mirror with PAT
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
+          git config credential.helper ""
+          git config --global credential.helper "!f() { echo username=x-access-token; echo password=$GITHUB_TOKEN; }; f"
           git push mirror main --force
