@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-    workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   mirror:
@@ -14,21 +14,20 @@ jobs:
       - name: Checkout source repo
         uses: actions/checkout@v3
 
-
       - name: List environment variables
         run: env
 
       - name: Debug PAT value (Temporary - Remove in production)
         env:
-          PAT: ${{ secrets.PAT_TOKEN || secrets.PAT }}
+          PAT: ${{ secrets.PAT }}
         run: |
-          echo "Length of PAT secret: ${{ secrets.PAT && secrets.PAT.length || '0' }}"
-          # This will output something like: "Length of PAT secret: 40" if it's a ghp_ token.
-          # If it outputs "Length of PAT secret: 0", the secret is not being loaded....
+          echo "Length of PAT secret: ${#PAT}"
+          # Or for basic visibility (be careful in public repos)
+          echo "PAT starts with: ${PAT:0:4}********"
 
       - name: Push code to second org repo
         env:
-          PAT: ${{ secrets.PAT_TOKEN || secrets.PAT }}
+          PAT: ${{ secrets.PAT }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
